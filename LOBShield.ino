@@ -5,36 +5,32 @@ int lastRead;
 void setup() {
   // initialize serial communications at 9600 bps:
   Serial.begin(9600); 
-  lastRead = readButtons();
+  lastRead = readButtons(); // Read in initial button press
 }
 
 void loop() {
+    
+  int newRead = readButtons(); // Get currently pressed button (if any)
   
-  /*while(true){
-    Serial.println(analogRead(analogInPin));
-    delay(100);
-  }*/
-  
-  int newRead = readButtons();
-  
-  if(newRead!=lastRead){
+  if(newRead!=lastRead){ // If the pressed button has changed, print it over serial
     
     Serial.println(newRead, DEC);
-    lastRead = newRead;
+    lastRead = newRead; // Save the new button that is pressed for the next check
+    delay(100);
     
   }
   
 }
 
-int readButtons(){
+int readButtons(){ // An example function to read the buttons
   
-  int analogReadFirst = analogRead(analogInPin);
+  int analogReadFirst = analogRead(analogInPin); // Read voltage from button matrix
   
-  delay(10);
+  delay(10); // Wait a moment to let the analog pins settle
   
-  int analogReadSecond = analogRead(analogInPin);
+  int analogReadSecond = analogRead(analogInPin); // Read it again
   
-  while(analogReadFirst!=analogReadSecond){
+  while(analogReadFirst!=analogReadSecond){ // Wait for a stable reading
     
     delay(10);
     analogReadFirst = analogReadSecond;
@@ -42,10 +38,10 @@ int readButtons(){
     
   }
   
-  if(analogReadFirst>999) {
+  if(analogReadFirst>999) { // Check what button the value corresponds to.
     return 1;
   }
-  else if(analogReadFirst>952) {
+  else if(analogReadFirst>952) { // You may need to tweak some of the higher number buttons to your board
     return 2;
   }
   else if(analogReadFirst>909) {
@@ -147,7 +143,7 @@ int readButtons(){
   else if(analogReadFirst>187) {
     return 35;
   }
-  else{
+  else{ // This means that the voltage is low enough to mean no button is pressed
     return 0;
   }
   
